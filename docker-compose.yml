@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  api:
+    container_name: go-api
+    build:
+      context: .
+      target: go-api
+    environment:
+      - APP_PORT=${APP_PORT}
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - database
+    entrypoint: sh -c "sleep 2 && ./main --db=migrate"
+  database:
+    container_name: database
+    image: postgres:alpine
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_DB=${DB_NAME}
